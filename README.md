@@ -2,7 +2,7 @@
 ## Welcome to Corona Virus Updates :clipboard:
 
 
-## Steps to follow :scroll:
+<!--## Steps to follow :scroll:
 
 ### 1. Fork it :fork_and_knife:
 
@@ -120,4 +120,4 @@ $ git push -u origin Folder_Name
 ```
 
 Finally, go to your repository in browser and click on `compare and pull requests`.
-Then add a title and description to your pull request that explains your precious effort.
+Then add a title and description to your pull request that explains your precious effort.-->
