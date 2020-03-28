@@ -4,7 +4,7 @@ import './index.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import  get  from 'lodash/get';
-import  size  from 'lodash/size';
+import  filter  from 'lodash/filter';
 import forEach from 'lodash/forEach';
 import  isEmpty  from 'lodash/isEmpty';
 import Container from 'react-bootstrap/Container';
@@ -18,18 +18,22 @@ import Badge from 'react-bootstrap/Badge';
 import Alert from 'react-bootstrap/Alert';
 import * as serviceWorker from './serviceWorker';
 import { KeyObject } from 'crypto';
+import Search from './search-component';
 
 export class Covid extends React.Component {
   constructor(props) {
-    super(props);
+		super(props);
+		this.handleSearchValueOnChange = this.handleSearchValueOnChange.bind(this);
     this.state = {
-			covidData: {}
+			covidData: {},
+			displayedData: {},
+			searchValue: ""
     };
 	}
 
 	getTableBody() {
 		let tableData = [];
-		forEach(this.state.covidData, (data, key) => {
+		forEach(this.state.displayedData, (data, key) => {
 			const casesToday = `${data.cases} | ${data.todayCases}`;
 			const deathsToday = `${data.deaths} | ${data.todayDeaths}`;
 			tableData.push(
@@ -140,12 +144,24 @@ export class Covid extends React.Component {
     </Accordion.Collapse>
   </Card>
 </Accordion>
-<div className = "covid__table">
-			{this.getTable()}
-			{this.getSpinner()}
-				</div>
 			</div>
 		);
+	}
+
+	getDisplayedData(searchValue) {
+		const displayedData = filter(this.state.covidData, (data, key) => {
+			const country = data.country.toLowerCase();
+			return country.indexOf(searchValue.toLowerCase()) === 0;
+		});
+		return displayedData;
+	}
+
+	handleSearchValueOnChange(e) {
+		const searchValue = e.target.value;
+		this.setState({
+			searchValue: searchValue,
+			displayedData: this.getDisplayedData(searchValue)
+		});
 	}
   
   render(){
@@ -161,7 +177,16 @@ export class Covid extends React.Component {
 	  return (
 			<div className="covid__body">
 				{this.getHeader()}
-				
+				<div className="covid__search-component">
+					<Search 
+						searchValue={this.state.searchValue}
+						searchValueOnChange={this.handleSearchValueOnChange}
+					/>
+				</div>
+				<div className = "covid__table">
+						{this.getTable()}
+						{this.getSpinner()}
+				</div>
 			</div>
     );
 	}
@@ -181,9 +206,9 @@ export class Covid extends React.Component {
 				return results.json();
 		}).then(data => {
 			this.setState({
-				covidData: data
+				covidData: data,
+				displayedData: data
 			});
-			console.log(data);
 		});
   }
 }

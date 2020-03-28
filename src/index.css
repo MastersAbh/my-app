@@ -11,12 +11,17 @@
 
 .covid__table {
   width: auto;
-  margin-top: 5%;
+  margin-top: 2rem;
+  text-align: center;
 }
 
 .covid__table-header {
   font-size: xx-large !important;
   width: 100%;
+}
+
+.covid__body {
+  text-align: center;
 }
 
 .covid__full-data-body {
@@ -26,4 +31,9 @@
 .covid__full-data-body .accordion {
   font-weight: bolder;
   font-size: x-large;
+}
+
+.covid__search-component {
+  width: 25%;
+  margin-top: 1rem;
 }
