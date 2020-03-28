@@ -27,7 +27,9 @@ export class Covid extends React.Component {
     this.state = {
 			covidData: {},
 			displayedData: {},
-			searchValue: ""
+			searchValue: "",
+			deathCount: "",
+			recoverCount: "",
     };
 	}
 
@@ -41,10 +43,10 @@ export class Covid extends React.Component {
 					<td>
 						<Alert variant="primary">
 								<Alert.Heading>
-										{data.country} 
+										{data.country}
 								</Alert.Heading>
 								<hr />
-  
+
 						</Alert>
 					</td>
 
@@ -67,7 +69,7 @@ export class Covid extends React.Component {
 					<td>
 						<Alert variant="danger">
 								<Alert.Heading>
-										{deathsToday} 
+										{deathsToday}
 								</Alert.Heading>
 								<hr />
 						</Alert>
@@ -97,8 +99,8 @@ export class Covid extends React.Component {
 
 	getTable() {
 		return (
-			<Table 
-			hover 
+			<Table
+			hover
 			variant="dark"
 			responsive
 			size="sm">
@@ -126,7 +128,7 @@ export class Covid extends React.Component {
 			</Table>
 		);
 	}
-	
+
 	getHeader() {
 		return(
 			<div className="covid__full-data-body">
@@ -163,9 +165,9 @@ export class Covid extends React.Component {
 			displayedData: this.getDisplayedData(searchValue)
 		});
 	}
-  
+
   render(){
-		
+
 		/*let options = [];
 		if (!isEmpty(covid)) {
 			forEach(covid, (data, value) => {
@@ -173,12 +175,12 @@ export class Covid extends React.Component {
 					console.log("jell");
 			});
 		}*/
-		
+
 	  return (
 			<div className="covid__body">
 				{this.getHeader()}
 				<div className="covid__search-component">
-					<Search 
+					<Search
 						searchValue={this.state.searchValue}
 						searchValueOnChange={this.handleSearchValueOnChange}
 					/>
@@ -205,6 +207,30 @@ export class Covid extends React.Component {
 		.then(results => {
 				return results.json();
 		}).then(data => {
+			let totalCountObj = {
+				country: 'All country',
+				cases: 0,
+				todayCases: 0,
+				deaths: 0,
+				todayDeaths: 0,
+				recovered: 0,
+				active: 0,
+				critical: 0
+			};
+			let processData = function(){
+
+				data.forEach(function(obj){
+					totalCountObj.cases += obj.cases;
+					totalCountObj.todayCases += obj.todayCases;
+					totalCountObj.deaths += obj.deaths;
+					totalCountObj.todayDeaths += obj.todayDeaths;
+					totalCountObj.recovered += obj.recovered;
+					totalCountObj.active += obj.active;
+					totalCountObj.critical += obj.critical;
+				});
+				data.unshift(totalCountObj);
+			}
+			processData();
 			this.setState({
 				covidData: data,
 				displayedData: data
