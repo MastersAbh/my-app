@@ -203,12 +203,15 @@ export class Covid extends React.Component {
 			});
 		});*/
 
+		// https://api.covid19india.org/state_district_wise.json
+		// https://api.covid19india.org/data.json
+
 		fetch('https://coronavirus-19-api.herokuapp.com/countries')
 		.then(results => {
 				return results.json();
 		}).then(data => {
 			let totalCountObj = {
-				country: 'All country',
+				country: 'All Countries',
 				cases: 0,
 				todayCases: 0,
 				deaths: 0,
