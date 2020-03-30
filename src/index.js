@@ -46,7 +46,6 @@ export class Covid extends React.Component {
 										{data.country}
 								</Alert.Heading>
 								<hr />
-
 						</Alert>
 					</td>
 
@@ -75,6 +74,7 @@ export class Covid extends React.Component {
 						</Alert>
 					</td>
 				</tr>
+		
 			);
 	});
 		return tableData;
@@ -155,7 +155,10 @@ export class Covid extends React.Component {
 			const country = data.country.toLowerCase();
 			return country.indexOf(searchValue.toLowerCase()) === 0;
 		});
-		return displayedData;
+		if(displayedData.length === 0) {
+			alert('Invalid search');
+		}
+		return displayedData.length > 0? displayedData: this.state.displayedData;
 	}
 
 	handleSearchValueOnChange(e) {
