@@ -11,8 +11,8 @@ export default class Search extends React.Component {
             <div>
                 <InputGroup className="mb-3">
     <FormControl
-      placeholder="Search for a country.."
-      aria-label="Recipient's username"
+      placeholder="Search for a region.."
+      aria-label="Region"
       aria-describedby="basic-addon2"
       value={this.props.searchValue}
       onChange={e => this.props.searchValueOnChange(e)}

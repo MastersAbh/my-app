@@ -9,6 +9,8 @@ import forEach from 'lodash/forEach';
 import  isEmpty  from 'lodash/isEmpty';
 import Container from 'react-bootstrap/Container';
 import Accordion from 'react-bootstrap/Accordion';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 import Spinner from 'react-bootstrap/Spinner';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -24,12 +26,16 @@ export class Covid extends React.Component {
   constructor(props) {
 		super(props);
 		this.handleSearchValueOnChange = this.handleSearchValueOnChange.bind(this);
+		this.setKey = this.setKey.bind(this);
     this.state = {
 			covidData: {},
 			displayedData: {},
+			indiaData: {},
+			displayedIndiaData: {},
 			searchValue: "",
 			deathCount: "",
 			recoverCount: "",
+			activeKey: "world"
     };
 	}
 
@@ -45,8 +51,6 @@ export class Covid extends React.Component {
 								<Alert.Heading>
 										{data.country}
 								</Alert.Heading>
-								<hr />
-
 						</Alert>
 					</td>
 
@@ -55,7 +59,6 @@ export class Covid extends React.Component {
 								<Alert.Heading>
 										{casesToday}
 								</Alert.Heading>
-								<hr />
 						</Alert>
 					</td>
 					<td>
@@ -63,7 +66,6 @@ export class Covid extends React.Component {
 								<Alert.Heading>
 										{data.recovered}
 								</Alert.Heading>
-								<hr />
 						</Alert>
 					</td>
 					<td>
@@ -71,7 +73,6 @@ export class Covid extends React.Component {
 								<Alert.Heading>
 										{deathsToday}
 								</Alert.Heading>
-								<hr />
 						</Alert>
 					</td>
 				</tr>
@@ -95,6 +96,80 @@ export class Covid extends React.Component {
 				</div>
 			);
 		}
+	}
+
+	getTableBodyForIndia() {
+		let tableData = [];
+		forEach(this.state.displayedIndiaData, (data, key) => {
+			const casesToday = `${data.confirmedCasesIndian} | ${data.confirmedCasesForeign}`;
+			const deathsToday = `${data.deaths}`;
+			tableData.push(
+				<tr>
+					<td>
+						<Alert variant="primary">
+								<Alert.Heading>
+										{data.loc}
+								</Alert.Heading>
+						</Alert>
+					</td>
+
+					<td>
+						<Alert variant="primary">
+								<Alert.Heading>
+										{casesToday}
+								</Alert.Heading>
+						</Alert>
+					</td>
+					<td>
+						<Alert variant="success">
+								<Alert.Heading>
+										{data.discharged}
+								</Alert.Heading>
+						</Alert>
+					</td>
+					<td>
+						<Alert variant="danger">
+								<Alert.Heading>
+										{deathsToday}
+								</Alert.Heading>
+						</Alert>
+					</td>
+				</tr>
+			);
+	});
+		return tableData;
+	}
+
+	getTableForIndia() {
+		return (
+			<Table
+			hover
+			variant="dark"
+			responsive
+			size="sm">
+			 <thead>
+				<tr>
+					<th>
+					<Badge variant="light"
+						className="covid__table-header"
+					>State</Badge>
+					</th>
+					<th><Badge variant="light"
+						className="covid__table-header"
+					>Cases (Indians | Foreigners)</Badge></th>
+					<th><Badge variant="light"
+						className="covid__table-header"
+					>Recovered</Badge></th>
+					<th><Badge variant="light"
+						className="covid__table-header"
+					>Deaths</Badge></th>
+				</tr>
+			 </thead>
+			 <tbody>
+				 {this.getTableBodyForIndia()}
+			 </tbody>
+			</Table>
+		);
 	}
 
 	getTable() {
@@ -151,18 +226,37 @@ export class Covid extends React.Component {
 	}
 
 	getDisplayedData(searchValue) {
-		const displayedData = filter(this.state.covidData, (data, key) => {
-			const country = data.country.toLowerCase();
-			return country.indexOf(searchValue.toLowerCase()) === 0;
+		let covidData = this.state.covidData;
+		let regionValue = "country";
+		if (this.state.activeKey === "india") {
+				covidData = this.state.indiaData;
+				regionValue = "loc";
+		}
+		const displayedData = filter(covidData, (data, key) => {
+			const region = get(data, regionValue, '').toLowerCase();
+			return region.indexOf(searchValue.toLowerCase()) === 0;
 		});
 		return displayedData;
 	}
 
 	handleSearchValueOnChange(e) {
 		const searchValue = e.target.value;
+		let newStateValue = {};
+		newStateValue.searchValue = searchValue;
+		if (this.state.activeKey === "world") {
+			newStateValue.displayedData = this.getDisplayedData(searchValue);
+		} else {
+			newStateValue.displayedIndiaData = this.getDisplayedData(searchValue);
+		}
+		this.setState(newStateValue);
+	}
+
+	setKey(k) {
 		this.setState({
-			searchValue: searchValue,
-			displayedData: this.getDisplayedData(searchValue)
+			activeKey: k,
+			searchValue: "",
+			displayedData: this.state.covidData,
+			displayedIndiaData: this.state.indiaData
 		});
 	}
 
@@ -185,26 +279,47 @@ export class Covid extends React.Component {
 						searchValueOnChange={this.handleSearchValueOnChange}
 					/>
 				</div>
-				<div className = "covid__table">
+				<Tabs
+					id="controlled-tab-example"
+					activeKey={this.state.activeKey}
+					onSelect={(k) => this.setKey(k)}
+				>
+					<Tab eventKey="world" title="World">
+					<div className = "covid__table">
 						{this.getTable()}
 						{this.getSpinner()}
 				</div>
+					</Tab>
+					<Tab eventKey="india" title="India">
+					<div className = "covid__table">
+						{this.getTableForIndia()}
+						{this.getSpinner()}
+				</div>
+					</Tab>
+				</Tabs>
 			</div>
     );
 	}
 	componentDidMount(){
 		document.title = "Covid Update";
-		/*fetch('https://pomber.github.io/covid19/timeseries.json')
-		.then(results => {
-				return results.json();
-		}).then(data => {
-			this.setState({
-				covidData: data
-			});
-		});*/
 
 		// https://api.covid19india.org/state_district_wise.json
 		// https://api.covid19india.org/data.json
+		// https://api.rootnet.in/covid19-in/stats/latest
+		// https://api.rootnet.in/covid19-in/stats/daily
+
+		fetch('https://api.rootnet.in/covid19-in/stats/daily')
+		.then(results => {
+				return results.json();
+		}).then(data => {
+				console.log(data);
+				const indiaData = get(data, 'data', []);
+				const obj = get(indiaData[indiaData.length - 1], 'regional', {});
+				this.setState({
+					indiaData: obj,
+					displayedIndiaData: obj
+				});
+		});
 
 		fetch('https://coronavirus-19-api.herokuapp.com/countries')
 		.then(results => {
