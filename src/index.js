@@ -21,6 +21,7 @@ import Alert from 'react-bootstrap/Alert';
 import * as serviceWorker from './serviceWorker';
 import { KeyObject } from 'crypto';
 import Search from './search-component';
+import Popup from './dialog';
 
 export class Covid extends React.Component {
   constructor(props) {
@@ -35,10 +36,17 @@ export class Covid extends React.Component {
 			searchValue: "",
 			deathCount: "",
 			recoverCount: "",
-			activeKey: "world"
+			activeKey: "world",
+			showPopup: false
     };
 	}
 
+	togglePopup() {
+		this.setState({
+		  showPopup: !this.state.showPopup
+		});
+	}
+	
 	getTableBody() {
 		let tableData = [];
 		forEach(this.state.displayedData, (data, key) => {
@@ -47,29 +55,37 @@ export class Covid extends React.Component {
 			tableData.push(
 				<tr>
 					<td>
-						<Alert variant="primary">
-								<Alert.Heading>
-										{data.country}
-								</Alert.Heading>
+						<Alert variant="primary" onClick={this.togglePopup.bind(this)}>
+							<Alert.Heading>
+								{data.country}
+							</Alert.Heading>
+							{this.state.showPopup ? 
+								<Popup
+								text='Maintain social distancing!'
+								closePopup={this.togglePopup.bind(this)}>
+								</Popup>
+								: null
+							}
 						</Alert>
+						
 					</td>
 
 					<td>
-						<Alert variant="primary">
+						<Alert variant="primary" onClick={this.togglePopup.bind(this)}>
 								<Alert.Heading>
 										{casesToday}
 								</Alert.Heading>
 						</Alert>
 					</td>
 					<td>
-						<Alert variant="success">
+						<Alert variant="success" onClick={this.togglePopup.bind(this)}> 
 								<Alert.Heading>
 										{data.recovered}
 								</Alert.Heading>
 						</Alert>
 					</td>
 					<td>
-						<Alert variant="danger">
+						<Alert variant="danger" onClick={this.togglePopup.bind(this)}>
 								<Alert.Heading>
 										{deathsToday}
 								</Alert.Heading>
