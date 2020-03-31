@@ -76,6 +76,7 @@ export class Covid extends React.Component {
 						</Alert>
 					</td>
 				</tr>
+		
 			);
 	});
 		return tableData;
@@ -244,9 +245,24 @@ export class Covid extends React.Component {
 		let newStateValue = {};
 		newStateValue.searchValue = searchValue;
 		if (this.state.activeKey === "world") {
-			newStateValue.displayedData = this.getDisplayedData(searchValue);
+				let displayedData = this.getDisplayedData(searchValue);
+			
+				if(displayedData.length === 0) {
+					newStateValue.displayedData = this.state.covidData;
+					newStateValue.searchValue = "";
+					alert('Invalid search');
+				} else {
+					newStateValue.displayedData = displayedData;
+				}
 		} else {
-			newStateValue.displayedIndiaData = this.getDisplayedData(searchValue);
+			let displayedIndiaData = this.getDisplayedData(searchValue);
+			if(displayedIndiaData.length === 0) {
+				newStateValue.displayedIndiaData = this.state.indiaData;
+				newStateValue.searchValue = "";
+				alert('Invalid search');
+			} else {
+				newStateValue.displayedIndiaData = displayedIndiaData;
+			}
 		}
 		this.setState(newStateValue);
 	}
