@@ -44,40 +44,42 @@ export class Covid extends React.Component {
 		forEach(this.state.displayedData, (data, key) => {
 			const casesToday = `${data.cases} | ${data.todayCases}`;
 			const deathsToday = `${data.deaths} | ${data.todayDeaths}`;
-			tableData.push(
-				<tr>
-					<td>
-						<Alert variant="primary">
-								<Alert.Heading>
-										{data.country}
-								</Alert.Heading>
-						</Alert>
-					</td>
+			if (!isEmpty(data.country) && data.country !== "World") {
+					tableData.push(
+						<tr>
+							<td>
+								<Alert variant="primary">
+										<Alert.Heading>
+												{data.country}
+										</Alert.Heading>
+								</Alert>
+							</td>
 
-					<td>
-						<Alert variant="primary">
-								<Alert.Heading>
-										{casesToday}
-								</Alert.Heading>
-						</Alert>
-					</td>
-					<td>
-						<Alert variant="success">
-								<Alert.Heading>
-										{data.recovered}
-								</Alert.Heading>
-						</Alert>
-					</td>
-					<td>
-						<Alert variant="danger">
-								<Alert.Heading>
-										{deathsToday}
-								</Alert.Heading>
-						</Alert>
-					</td>
-				</tr>
-		
-			);
+							<td>
+								<Alert variant="primary">
+										<Alert.Heading>
+												{casesToday}
+										</Alert.Heading>
+								</Alert>
+							</td>
+							<td>
+								<Alert variant="success">
+										<Alert.Heading>
+												{data.recovered}
+										</Alert.Heading>
+								</Alert>
+							</td>
+							<td>
+								<Alert variant="danger">
+										<Alert.Heading>
+												{deathsToday}
+										</Alert.Heading>
+								</Alert>
+							</td>
+						</tr>
+				
+					);
+			}
 	});
 		return tableData;
 	}
