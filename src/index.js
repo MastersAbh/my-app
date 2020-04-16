@@ -21,6 +21,7 @@ import Alert from 'react-bootstrap/Alert';
 import * as serviceWorker from './serviceWorker';
 import { KeyObject } from 'crypto';
 import Search from './search-component';
+import Popup from './dialog';
 
 export class Covid extends React.Component {
   constructor(props) {
@@ -35,8 +36,15 @@ export class Covid extends React.Component {
 			searchValue: "",
 			deathCount: "",
 			recoverCount: "",
-			activeKey: "world"
+			activeKey: "world",
+			showPopup: false
     };
+	}
+
+	togglePopup() {
+		this.setState({
+		  showPopup: !this.state.showPopup
+		});
 	}
 
 	getTableBody() {
@@ -45,15 +53,23 @@ export class Covid extends React.Component {
 			const casesToday = `${data.cases} | ${data.todayCases}`;
 			const deathsToday = `${data.deaths} | ${data.todayDeaths}`;
 			if (!isEmpty(data.country) && data.country !== "World") {
-					tableData.push(
-						<tr>
-							<td>
-								<Alert variant="primary">
-										<Alert.Heading>
-												{data.country}
-										</Alert.Heading>
-								</Alert>
-							</td>
+			tableData.push(
+				<tr>
+					<td>
+						<Alert variant="primary" onClick={this.togglePopup.bind(this)}>
+							<Alert.Heading>
+								{data.country}
+							</Alert.Heading>
+							{this.state.showPopup ? 
+								<Popup
+								text='Happy Birthday Ishani!'
+								closePopup={this.togglePopup.bind(this)}>
+								</Popup>
+								: null
+							}
+						</Alert>
+						
+					</td>
 
 							<td>
 								<Alert variant="primary">
