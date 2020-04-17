@@ -57,9 +57,7 @@ export class Covid extends React.Component {
 				<tr>
 					<td>
 						<Alert variant="primary" onClick={this.togglePopup.bind(this)}>
-							<Alert.Heading>
 								{data.country}
-							</Alert.Heading>
 							{this.state.showPopup ? 
 								<Popup
 								text='Happy Birthday Ishani!'
@@ -73,23 +71,17 @@ export class Covid extends React.Component {
 
 							<td>
 								<Alert variant="primary">
-										<Alert.Heading>
 												{casesToday}
-										</Alert.Heading>
 								</Alert>
 							</td>
 							<td>
 								<Alert variant="success">
-										<Alert.Heading>
 												{data.recovered}
-										</Alert.Heading>
 								</Alert>
 							</td>
 							<td>
 								<Alert variant="danger">
-										<Alert.Heading>
 												{deathsToday}
-										</Alert.Heading>
 								</Alert>
 							</td>
 						</tr>
@@ -126,31 +118,23 @@ export class Covid extends React.Component {
 				<tr>
 					<td>
 						<Alert variant="primary">
-								<Alert.Heading>
 										{data.loc}
-								</Alert.Heading>
 						</Alert>
 					</td>
 
 					<td>
 						<Alert variant="primary">
-								<Alert.Heading>
 										{casesToday}
-								</Alert.Heading>
 						</Alert>
 					</td>
 					<td>
 						<Alert variant="success">
-								<Alert.Heading>
 										{data.discharged}
-								</Alert.Heading>
 						</Alert>
 					</td>
 					<td>
 						<Alert variant="danger">
-								<Alert.Heading>
 										{deathsToday}
-								</Alert.Heading>
 						</Alert>
 					</td>
 				</tr>
@@ -169,19 +153,11 @@ export class Covid extends React.Component {
 			 <thead>
 				<tr>
 					<th>
-					<Badge variant="light"
-						className="covid__table-header"
-					>State</Badge>
+					State
 					</th>
-					<th><Badge variant="light"
-						className="covid__table-header"
-					>Cases (Indians | Foreigners)</Badge></th>
-					<th><Badge variant="light"
-						className="covid__table-header"
-					>Recovered</Badge></th>
-					<th><Badge variant="light"
-						className="covid__table-header"
-					>Deaths</Badge></th>
+					<th>Cases (Indians | Foreigners)</th>
+					<th>Recovered</th>
+					<th>Deaths</th>
 				</tr>
 			 </thead>
 			 <tbody>
@@ -200,20 +176,11 @@ export class Covid extends React.Component {
 			size="sm">
 			 <thead>
 				<tr>
-					<th>
-					<Badge variant="light"
-						className="covid__table-header"
-					>Country</Badge>
+					<th>Country
 					</th>
-					<th><Badge variant="light"
-						className="covid__table-header"
-					>Cases (Total | Today)</Badge></th>
-					<th><Badge variant="light"
-						className="covid__table-header"
-					>Recovered</Badge></th>
-					<th><Badge variant="light"
-						className="covid__table-header"
-					>Deaths (Total | Today)</Badge></th>
+					<th>Cases (Total | Today)</th>
+					<th>Recovered</th>
+					<th>Deaths (Total | Today)</th>
 				</tr>
 			 </thead>
 			 <tbody>
@@ -370,16 +337,18 @@ export class Covid extends React.Component {
 				critical: 0
 			};
 			let processData = function(){
-
-				data.forEach(function(obj){
-					totalCountObj.cases += obj.cases;
-					totalCountObj.todayCases += obj.todayCases;
-					totalCountObj.deaths += obj.deaths;
-					totalCountObj.todayDeaths += obj.todayDeaths;
-					totalCountObj.recovered += obj.recovered;
-					totalCountObj.active += obj.active;
-					totalCountObj.critical += obj.critical;
-				});
+			data.splice(0, 8);
+			data.forEach(function(obj, index){
+						totalCountObj.cases += obj.cases;
+						totalCountObj.todayCases += obj.todayCases;
+						totalCountObj.deaths += obj.deaths;
+						totalCountObj.todayDeaths += obj.todayDeaths;
+						totalCountObj.recovered += obj.recovered;
+						totalCountObj.active += obj.active;
+						totalCountObj.critical += obj.critical;
+					
+			});
+			
 				data.unshift(totalCountObj);
 			}
 			processData();
