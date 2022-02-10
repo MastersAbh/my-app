@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "next",
     "react-bootstrap": "^1.0.0",
     "react-dom": "next",
